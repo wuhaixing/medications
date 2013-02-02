@@ -1,0 +1,28 @@
+    @(drugs: List[Drug], drugForm: Form[String])
+    @import helper._
+    
+    @main("药品清单") {
+        
+        <h1>药品：@drugs.size </h1>
+        <ul>
+            @drugs.map { drug =>
+                <li>
+                    @drug.label
+                    
+                    @form(action=routes.Drugs.delete(drug.id),'method->"DELETE") {
+                        <input type="submit" value="删除">
+                    }
+                </li>
+            }
+        </ul>
+        
+        <h2>添加新药品</h2>
+        
+        @form(routes.Drugs.add) {
+            
+            @inputText(drugForm("label"),'_label -> "品名") 
+            
+            <input type="submit" value="新建">
+            
+        }
+    }
