@@ -22,7 +22,10 @@ object Drugs extends Controller {
       )
     }
       
-  def delete(id: Long) = TODO
+  def delete(id: Long) = Action {
+    Drug.delete(id)
+    Redirect(routes.Drugs.index)
+  }
 
     
     val drugForm = Form(

@@ -6,7 +6,7 @@
 GET       /                       controllers.Drugs.index
 
 POST      /drugs                  controllers.Drugs.add
-DELETE    /drugs/:id              controllers.Drugs.delete(id: Long)
+POST    /drugs/:id/delete         controllers.Drugs.delete(id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file             controllers.Assets.at(path="/public", file)

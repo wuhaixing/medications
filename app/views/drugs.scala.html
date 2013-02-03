@@ -9,7 +9,7 @@
                 <li>
                     @drug.label
                     
-                    @form(action=routes.Drugs.delete(drug.id),'method->"DELETE") {
+                    @form(action=routes.Drugs.delete(drug.id)) {
                         <input type="submit" value="删除">
                     }
                 </li>
