@@ -1,0 +1,3 @@
+# Messages
+
+drugs.list.title={0,choice,0#No drugs|1#One drug|1<{0,number,integer} drugs} found

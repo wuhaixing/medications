@@ -3,9 +3,12 @@
 # ~~~~
 
 # Home page
-GET       /                       controllers.Drugs.index
+GET     /                         controllers.Drugs.index
 
-POST      /drugs                  controllers.Drugs.add
+# Drugs list (look at the default values for pagination parameters)
+GET     /drugs                    controllers.Drugs.list(p:Int ?= 0, s:Int ?= 2, f ?= "")
+
+POST    /drugs                    controllers.Drugs.add
 POST    /drugs/:id/delete         controllers.Drugs.delete(id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
