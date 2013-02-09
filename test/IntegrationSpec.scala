@@ -13,9 +13,9 @@ class IntegrationSpec extends Specification {
     
     "work from within a browser" in {
       running(TestServer(3333), HTMLUNIT) { browser =>
-        browser.goTo("http://app1.sfda.gov.cn/datasearch/face3/base.jsp?tableId=25&tableName=TABLE25&title=%B9%FA%B2%FA%D2%A9%C6%B7&bcId=124356560303886909015737447882")
-        
-        browser.$("div.zs2").first.getText must equalTo("国产药品  的内容列表,共有 183857 条记录")
+        browser.goTo("http://localhost:3333/")
+        browser.$("header h1").first.getText must equalTo("iWenyao application — Drugs database")
+        browser.$("section h1").first.getText must equalTo ("找到300 种药品")
         
     }
     

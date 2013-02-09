@@ -1,0 +1,33 @@
+@(id: Long, drugForm: Form[Drug])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
+
+@main {
+    
+    <h1>药品信息编辑</h1>
+    
+    @form(routes.Drugs.update(id)) {
+        
+        <fieldset>
+        
+            @inputText(drugForm("label"), '_label -> "药品名称")
+            @inputText(drugForm("zhunzi"), '_label -> "国药准字")
+            @inputText(drugForm("company"), '_label -> "公司")
+            @inputText(drugForm("basedCode"), '_label -> "本位码")
+        
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="保存药品" class="btn primary"> or 
+            <a href="@routes.Drugs.list()" class="btn">取消</a> 
+        </div>
+        
+    }
+    
+    @form(routes.Drugs.delete(id), 'class -> "topRight") {
+        <input type="submit" value="删除这种药品" class="btn danger">
+    }
+    
+}

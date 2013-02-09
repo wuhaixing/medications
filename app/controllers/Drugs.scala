@@ -2,10 +2,15 @@ package controllers
 
 import play.api._
 import play.api.mvc._
+
 import play.api.data._
 import play.api.data.Forms._
+
+import anorm._
+
 import models.Drug
 import views._    
+
 object Drugs extends Controller {
   /**
    * This result directly redirect to the application home.
@@ -13,8 +18,14 @@ object Drugs extends Controller {
   val Home = Redirect(routes.Drugs.list(0, 2, ""))
   
   val drugForm = Form(
-                 "label" -> nonEmptyText
-                 )   
+              mapping(
+                "id" -> ignored(NotAssigned:Pk[Long]),
+                "label" -> nonEmptyText,
+                "zhunzi" -> nonEmptyText,
+                "company" -> nonEmptyText,
+                "basedCode" -> nonEmptyText
+                )(Drug.apply)(Drug.unapply)
+            )   
 
   def index = Action { Home }
   
@@ -31,12 +42,54 @@ object Drugs extends Controller {
       orderBy, filter
     ))
   }
+
+  /**
+   * Display the 'edit form' of a existing Drug.
+   *
+   * @param id Id of the drug to edit
+   */
+  def edit(id: Long) = Action {
+    Drug.findById(id).map { drug =>
+      Ok(html.editForm(id, drugForm.fill(drug)))
+    }.getOrElse(NotFound)
+  }
+
+  /**
+   * Handle the 'edit form' submission 
+   *
+   * @param id Id of the computer to edit
+   */
+  def update(id: Long) = Action { implicit request =>
+    drugForm.bindFromRequest.fold(
+      formWithErrors => BadRequest(html.editForm(id, formWithErrors)),
+      drug => {
+        Drug.update(id, drug)
+        Home.flashing("success" -> "Drug %s has been updated".format(drug.label))
+      }
+    )
+  }
   
-  def add = TODO
+      
+  def add =  Action {
+    Ok(html.createForm(drugForm))
+  }
+  
+  /**
+   * Handle the 'new computer form' submission.
+   */
+  def save = Action { implicit request =>
+    drugForm.bindFromRequest.fold(
+      formWithErrors => BadRequest(html.createForm(formWithErrors)),
+      drug => {
+        Drug.insert(drug)
+        Home.flashing("success" -> "drug %s has been created".format(drug.label))
+      }
+    )
+  }
       
   def delete(id: Long) = Action {
      Drug.delete(id)
-     Redirect(routes.Drugs.index)
+     Home.flashing("success" -> "Drug has been deleted")
    }
 
     

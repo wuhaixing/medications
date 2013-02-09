@@ -27,7 +27,17 @@ object Drug{
         case id~label~zhunzi~company~basedCode => Drug(id, label,zhunzi,company,basedCode)
       }
     }
-          
+
+  
+  /**
+   * Retrieve a drug from the id.
+   */
+  def findById(id: Long): Option[Drug] = {
+    DB.withConnection { implicit connection =>
+      SQL("select * from drug where id = {id}").on('id -> id).as(Drug.simple.singleOpt)
+    }
+  }
+            
    /**
    * Return a page of Drug.
    *
@@ -70,11 +80,42 @@ object Drug{
     }
     
    }
-      
-   def create(label: String) {
+  /**
+   * Update a computer.
+   *
+   * @param id The computer id
+   * @param computer The computer values.
+   */
+  def update(id: Long, drug: Drug) = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          update drug
+          set label = {label}, zhunzi = {zhunzi}, company = {company}, basedCode = {basedCode}
+          where id = {id}
+        """
+      ).on(
+        'id -> id,
+        'label -> drug.label,
+        'zhunzi -> drug.zhunzi,
+        'company -> drug.company,
+        'basedCode -> drug.basedCode
+      ).executeUpdate()
+    }
+  }
+        
+   def insert(drug: Drug) {
       DB.withConnection { implicit c =>
-        SQL("insert into drug(label) values ({label})").on(
-          'label -> label
+        SQL("""
+             insert into drug values (
+              (select next value for drug_id_seq),
+              {label},{zhunzi},{company},{basedCode}
+             )
+            """).on(
+          'label -> drug.label,
+          'zhunzi -> drug.zhunzi,
+          'company -> drug.company,
+          'basedCode -> drug.basedCode
         ).executeUpdate()
       }
     }
