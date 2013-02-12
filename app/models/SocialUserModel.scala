@@ -1,7 +1,7 @@
 package models
 
 import securesocial.core.{UserId, Identity,SocialUser}
-import java.util.UUID
+import _root_.java.util.{Date, UUID}
 import org.joda.time.DateTime
 import securesocial.core.providers.Token
 import securesocial.core.AuthenticationMethod
@@ -37,7 +37,7 @@ object SocialUserModel{
               AuthenticationMethod("userPassword"),
               None,
               None,
-              Some(PasswordInfo(password, hasher))
+              Some(PasswordInfo("bcrypt", password, None))
            )
      }
   }
@@ -45,8 +45,8 @@ object SocialUserModel{
   val token = { 
           get[String]("uuid") ~ 
           get[String]("email") ~
-          get[String]("creation_time") ~
-          get[String]("expiration_time") ~
+          get[Date]("creation_time") ~
+          get[Date]("expiration_time") ~
           get[Boolean]("is_sign_up") map {
             case uuid~email~creation_time~expiration_time~is_sign_up => 
           Token(
@@ -115,7 +115,7 @@ object SocialUserModel{
             'last_name -> user.lastName,
             'email -> user.email,
             'avatar_url -> user.avatarUrl,
-            'hasher -> user.passwordInfo.get.hasher,
+            'hasher -> "bcrypt",
             'password -> user.passwordInfo.get.password).executeUpdate()
         }
       } else { // user exists
@@ -140,7 +140,7 @@ object SocialUserModel{
                 'last_name -> user.lastName,
                 'email -> user.email,
                 'avatar_url -> user.avatarUrl,
-                'hasher -> user.passwordInfo.get.hasher,
+                'hasher -> "bcrypt",
                 'password -> user.passwordInfo.get.password).executeUpdate()
       }
     } 
@@ -160,7 +160,7 @@ object SocialUserModel{
   		    insert into TOKEN 
     			  (uuid, email, creation_time, expiration_time, is_sign_up)
     			values
-    			  ({uuid}, {email}, {creation_time}, {expiration_time}, {is_sign_up})
+    			  ({uuid}, {email},  parsedatetime({creation_time}, 'yyyy-MM-dd HH:mm:ss'), parsedatetime({expiration_time}, 'yyyy-MM-dd HH:mm:ss'), {is_sign_up})
   		  """).on(
   		    'uuid -> token.uuid,
   		    'email -> token.email,

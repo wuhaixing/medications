@@ -25,8 +25,8 @@
     CREATE TABLE TOKEN (
         UUID VARCHAR(100) NOT NULL, 
         EMAIL VARCHAR(100), 
-        CREATION_TIME DATETIME, 
-        EXPIRATION_TIME DATETIME, 
+        CREATION_TIME TIMESTAMP, 
+        EXPIRATION_TIME TIMESTAMP, 
         IS_SIGN_UP BOOLEAN,
         constraint pk_token_uuid primary key (UUID)); 
     # --- !Downs
