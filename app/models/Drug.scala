@@ -34,7 +34,7 @@ object Drug{
    */
   def findById(id: Long): Option[Drug] = {
     DB.withConnection { implicit connection =>
-      SQL("select * from drug where id = {id}").on('id -> id).as(Drug.simple.singleOpt)
+      SQL("select * from drug where id = {id}").on('id -> id).as(simple.singleOpt)
     }
   }
             
@@ -81,10 +81,10 @@ object Drug{
     
    }
   /**
-   * Update a computer.
+   * Update a drug.
    *
-   * @param id The computer id
-   * @param computer The computer values.
+   * @param id The drug id
+   * @param drug The drug values.
    */
   def update(id: Long, drug: Drug) = {
     DB.withConnection { implicit connection =>

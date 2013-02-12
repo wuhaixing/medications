@@ -9,9 +9,10 @@ import play.api.data.Forms._
 import anorm._
 
 import models.Drug
+import securesocial.core.{Identity, Authorization,SecureSocial}
 import views._    
 
-object Drugs extends Controller {
+object Drugs extends Controller with SecureSocial{
   /**
    * This result directly redirect to the application home.
    */
@@ -48,10 +49,12 @@ object Drugs extends Controller {
    *
    * @param id Id of the drug to edit
    */
-  def edit(id: Long) = Action {
-    Drug.findById(id).map { drug =>
-      Ok(html.editForm(id, drugForm.fill(drug)))
-    }.getOrElse(NotFound)
+  def edit(id: Long) = SecuredAction  { implicit request =>
+          {
+              Drug.findById(id).map { drug =>
+                      Ok(html.editForm(id, drugForm.fill(drug)))
+                    }.getOrElse(NotFound)
+          }
   }
 
   /**
