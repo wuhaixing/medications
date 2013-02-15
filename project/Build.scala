@@ -9,6 +9,7 @@ object ApplicationBuild extends Build {
 
     val appDependencies = Seq(
       "securesocial" % "securesocial_2.9.1" % "2.0.8"
+      "postgresql" % "postgresql" % "8.4-702.jdbc4"
       // Add your project dependencies here,
     )
 
