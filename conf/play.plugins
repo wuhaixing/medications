@@ -1,6 +1,6 @@
 1500:com.typesafe.plugin.CommonsMailerPlugin
 9996:securesocial.core.providers.utils.DefaultPasswordValidator
-9997:securesocial.controllers.DefaultTemplatesPlugin
+9997:controllers.security.CustomeTemplatesPlugin
 9998:service.DatabaseUserService
 9999:securesocial.core.providers.utils.BCryptPasswordHasher
 10002:securesocial.core.providers.GoogleProvider
