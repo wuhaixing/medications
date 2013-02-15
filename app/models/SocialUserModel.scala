@@ -116,7 +116,7 @@ object SocialUserModel{
             'email -> user.email,
             'avatar_url -> user.avatarUrl,
             'hasher -> "bcrypt",
-            'password -> user.passwordInfo.get.password).executeUpdate()
+            'password -> user.passwordInfo.getOrElse("")).executeUpdate()
         }
       } else { // user exists
         // update the user
@@ -141,7 +141,7 @@ object SocialUserModel{
                 'email -> user.email,
                 'avatar_url -> user.avatarUrl,
                 'hasher -> "bcrypt",
-                'password -> user.passwordInfo.get.password).executeUpdate()
+                'password -> user.passwordInfo.getOrElse("")).executeUpdate()
       }
     } 
   } 
