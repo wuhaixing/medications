@@ -14,7 +14,6 @@ object ApplicationBuild extends Build {
     ) 
     
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings( 
-      resolvers += Resolver.url("SecureSocial Repository", url("http://securesocial.ws/repository/releases/"))(Resolver.ivyStylePatterns),
       resolvers += Resolver.file("Local Repository", file("D:/play-2.0.4/repository/local/"))(Resolver.ivyStylePatterns)   
       // Add your own project settings here      
     )
