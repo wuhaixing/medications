@@ -22,16 +22,17 @@ object SocialUserModel{
           get[String]("provider_id") ~
           get[String]("first_name") ~
           get[String]("last_name") ~
+          get[String]("full_name") ~
           get[Option[String]]("email") ~
           get[Option[String]]("avatar_url") ~
           get[String]("hasher") ~
           get[String]("password") map {
-            case user_id~provider_id~first_name~last_name~email~avatar_url~hasher~password => 
+            case user_id~provider_id~first_name~last_name~full_name~email~avatar_url~hasher~password => 
           SocialUser(
               UserId(user_id, provider_id),
               first_name, 
               last_name, 
-              first_name + " " + last_name, 
+              full_name, 
               email,
               avatar_url, 
               AuthenticationMethod("userPassword"),
@@ -59,13 +60,10 @@ object SocialUserModel{
    * find user
    * 
    */
-   def find(id: UserId) = {
+   def find(id: UserId):Option[Identity] = {
     DB.withConnection { implicit c =>
       SQL(
-  		  """
-  		    select * from SOCIAL_USER
-  		    where user_id = {user_id};
-  		  """
+  		  "select * from SOCIAL_USER where user_id = {user_id};"
       ).on("user_id" -> id.id).as(SocialUserModel.socialUser.singleOpt)
     }
    }
@@ -96,7 +94,8 @@ object SocialUserModel{
    * (actually save or update)
    * 
    */
-  def save(user: Identity) {
+  def save(user: Identity):Identity = {
+  
       val socialUser = find(user.id)
       
       if (socialUser == None) { // user not exists
@@ -105,14 +104,15 @@ object SocialUserModel{
         SQL(
           """
     		    insert into SOCIAL_USER 
-        		  (user_id,provider_id,first_name,last_name,email,avatar_url,hasher,password)
+        		  (user_id,provider_id,first_name,last_name,full_name,email,avatar_url,hasher,password)
         		values
-        		  ({user_id},{provider_id},{first_name},{last_name},{email},{avatar_url},{hasher},{password})
+        		  ({user_id},{provider_id},{first_name},{last_name},{full_name},{email},{avatar_url},{hasher},{password})
     		  """).on(
             'user_id -> user.id.id,
             'provider_id -> user.id.providerId,
             'first_name -> user.firstName,
             'last_name -> user.lastName,
+            'full_name -> user.fullName,
             'email -> user.email,
             'avatar_url -> user.avatarUrl,
             'hasher -> "bcrypt",
@@ -128,6 +128,7 @@ object SocialUserModel{
                   provider_id= {provider_id},
                   first_name= {first_name},
                   last_name= {last_name},
+                  full_name= {full_name},
                   email= {email},
                   avatar_url= {avatar_url},
                   hasher= {hasher},
@@ -138,12 +139,14 @@ object SocialUserModel{
                 'provider_id -> user.id.providerId,
                 'first_name -> user.firstName,
                 'last_name -> user.lastName,
+                'full_name -> user.fullName,
                 'email -> user.email,
                 'avatar_url -> user.avatarUrl,
                 'hasher -> "bcrypt",
                 'password -> user.passwordInfo.getOrElse("")).executeUpdate()
       }
-    } 
+    }
+    find(user.id).getOrElse(user) 
   } 
   
 

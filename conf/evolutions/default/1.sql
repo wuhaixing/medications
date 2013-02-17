@@ -17,6 +17,7 @@
         provider_id               varchar(255),
         first_name                varchar(64),
         last_name                 varchar(64),
+        full_name                 varchar(128),
         email                     varchar(255),
         avatar_url                 varchar(255),
         hasher                    varchar(255),

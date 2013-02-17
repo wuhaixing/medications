@@ -43,7 +43,7 @@ class DatabaseUserService(application: Application) extends UserServicePlugin(ap
        * This is your chance to save the user information in your backing store.
        * @param user
        */
-      def save(user: Identity) {
+      def save(user: Identity): Identity = {
         SocialUserModel.save(user)
       }
     
